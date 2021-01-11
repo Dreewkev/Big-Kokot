@@ -86,7 +86,7 @@ app.post('/signup', async (req, res) => {
         }
     })
 
-    user = new User({
+    let user = new User({
         email,
         username,
         birthDate,
