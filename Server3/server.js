@@ -84,19 +84,22 @@ app.post('/signup', async (req, res) => {
             console.log(results)
             return res.json('User registered')
         }
-    })
+        const id = results[0].id;
 
-    let user = new User({
+        var token = jwt.sign({ id/*id: user.id*/ }, 'password');
+        res.json({ token: token })
+    })
+    
+    /*let user = new User({
         email,
         username,
         birthDate,
         password,
     })
-    console.log(user)
+    console.log(user)*/
 
     //await user.save()
-    var token = jwt.sign({ id: user.id }, 'password');
-    res.json({ token: token })
+   
 })
 
 //login route api
