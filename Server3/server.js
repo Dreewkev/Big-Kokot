@@ -5,7 +5,7 @@ const mysql = require('mysql')
 const dotenv = require('dotenv')
 var jwt = require('jsonwebtoken')
 
-dotenv.config({ path: './.env'})
+dotenv.config({ path: './.env' })
 
 const db = mysql.createConnection({
     host: process.env.DATABASE_HOST,
@@ -15,31 +15,31 @@ const db = mysql.createConnection({
     port: process.env.DATABASE_PORT
 })
 
-db.connect((error) =>{
-    if(error) {
+db.connect((error) => {
+    if (error) {
         console.log(error)
-    }else {
+    } else {
         console.log("MySQL connected! :)))")
     }
 })
 
-async function connectDB(){
+async function connectDB() {
     await mongoose.connect(
         "mongodb+srv://drew1:roadz@cluster0.pi9ou.mongodb.net/drew?retryWrites=true&w=majority",
-        {useUnifiedTopology: true, useNewUrlParser: true}
+        { useUnifiedTopology: true, useNewUrlParser: true }
     )
     console.log("db connected")
 }
 connectDB()
 
 //this takes the psot body
-app.use(express.json({extended: false }))
+app.use(express.json({ extended: false }))
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
 //model
-var schema = new mongoose.Schema({ email: 'string', username: 'string', birthDate: 'string', password: 'string'})
-var User = mongoose.model('User', schema)
+//var schema = new mongoose.Schema({ email: 'string', username: 'string', birthDate: 'string', password: 'string'})
+//var User = mongoose.model('User', schema)
 
 /*amqp.connect('amqp://localhost', (err, conn) => {
     conn.createChannel((err, ch) => {
@@ -56,17 +56,18 @@ var User = mongoose.model('User', schema)
 })*/
 
 //signup route api
-app.post('/signup', async(req, res) => {
-    const  {email, username, birthDate, password} = req.body
+app.post('/signup', async (req, res) => {
+    const { email, username, birthDate, password } = req.body
+    //const  {fname, lname, username, email, password, birthDate, phonenumber, secretquestion, secretanswer} = req.body
     console.log(`${email}:${username}:${birthDate}:${password}`);
 
-    db.query('SELECT email FROM roadzuser WHERE email = ?', [email], (error, results) =>{
-        if(error){
+    db.query('SELECT email FROM roadzuser WHERE email = ?', [email], (error, results) => {
+        if (error) {
             console.log(error)
         }
 
-        if(results.length > 0){
-            return res.json({msg: "Email already taken"})
+        if (results.length > 0) {
+            return res.json({ msg: "Email already taken" })
         }
     })
 
@@ -75,10 +76,11 @@ app.post('/signup', async(req, res) => {
     /*if(user){
         return res.json({msg: "Email already taken"})
     }*/
-    db.query('INSERT INTO roadzuser SET ?', {email: email, username: username, dob: birthDate, pwhash: password}, (error, results) =>{
-        if(error){
+    db.query(`INSERT INTO roadzuser (fname,lname,username,email,pwhash,dob,phonenumber,secretquestion,secretanswer) VALUES (kevin, drewniak, ${username}, ${email}, 
+        ${password}, ${birthdate}, 012301, hallo, tschau);`, (error, results) => {
+        if (error) {
             console.log(error)
-        }else{
+        } else {
             console.log(results)
             return res.json('User registered')
         }
@@ -94,36 +96,36 @@ app.post('/signup', async(req, res) => {
 
     //await user.save()
     var token = jwt.sign({ id: user.id }, 'password');
-    res.json({token: token})
+    res.json({ token: token })
 })
 
 //login route api
-app.post('/login', async(req, res) => {
-    const  {email, username, birthDate, password} = req.body
+app.post('/login', async (req, res) => {
+    const { email, username, birthDate, password } = req.body
     console.log(`${email}:${username}:${birthDate}:${password}`);
 
-    let user = await User.findOne({email})
+    let user = await User.findOne({ email })
     console.log(user)
-    if(!user){
-        return res.json({msg: "no user found with that email"})
+    if (!user) {
+        return res.json({ msg: "no user found with that email" })
     }
-    if(user.password !== password){
-        return res.json({msg: "password is not correct"})
+    if (user.password !== password) {
+        return res.json({ msg: "password is not correct" })
     }
 
     var token = jwt.sign({ id: user.id }, 'password');
-    return res.json({token: token})
+    return res.json({ token: token })
 })
 
 //private route
-app.post('/private', async(req, res) => {
+app.post('/private', async (req, res) => {
     let token = req.header("token")
-    if(!token){
-        return res.json({msg: "Sorry, this is a private route"})
+    if (!token) {
+        return res.json({ msg: "Sorry, this is a private route" })
     }
     var decoded = jwt.verify(token, 'password');
     console.log(decoded.id) // 721dhbsa8a
-    return res.json({msg: "You did it, your in, the token was successfull"})
+    return res.json({ msg: "You did it, your in, the token was successfull" })
 })
 
 app.listen(5000, () => console.log('Example app listening on port 5000!'))
