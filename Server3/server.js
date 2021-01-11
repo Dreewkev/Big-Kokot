@@ -69,6 +69,19 @@ app.post('/signup', async (req, res) => {
         if (results.length > 0) {
             return res.json({ msg: "Email already taken" })
         }
+        
+        db.query(`INSERT INTO roadzuser (fname,lname,username,email,pwhash,dob,phonenumber,secretquestion,secretanswer) VALUES ("kevin", "drewniak", "${username}", "${email}", "${password}", "2021-01-11", "012301", "hallo", "tschau");`, (error, results) => {
+            if (error) {
+                console.log(error)
+            } else {
+                console.log(results)
+                return res.json('User registered')
+            }
+            const id = results[0].id;
+    
+            var token = jwt.sign({ id/*id: user.id*/ }, 'password');
+            res.json({ token: token })
+        })
     })
 
     //let user = await User.findOne({email}) //Direkt über Datenbank
@@ -76,18 +89,7 @@ app.post('/signup', async (req, res) => {
     /*if(user){
         return res.json({msg: "Email already taken"})
     }*/
-    db.query(`INSERT INTO roadzuser (fname,lname,username,email,pwhash,dob,phonenumber,secretquestion,secretanswer) VALUES ("kevin", "drewniak", "${username}", "${email}", "${password}", "2021-01-11", "012301", "hallo", "tschau");`, (error, results) => {
-        if (error) {
-            console.log(error)
-        } else {
-            console.log(results)
-            return res.json('User registered')
-        }
-        const id = results[0].id;
-
-        var token = jwt.sign({ id/*id: user.id*/ }, 'password');
-        res.json({ token: token })
-    })
+    
     
     /*let user = new User({
         email,
