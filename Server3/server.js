@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const mongoose = require("mongoose")
+//const mongoose = require("mongoose")
 const mysql = require('mysql')
 const dotenv = require('dotenv')
 var jwt = require('jsonwebtoken')
@@ -23,14 +23,14 @@ db.connect((error) => {
     }
 })
 
-async function connectDB() {
+/*async function connectDB() {
     await mongoose.connect(
         "mongodb+srv://drew1:roadz@cluster0.pi9ou.mongodb.net/drew?retryWrites=true&w=majority",
         { useUnifiedTopology: true, useNewUrlParser: true }
     )
     console.log("db connected")
 }
-connectDB()
+connectDB()*/
 
 //this takes the psot body
 app.use(express.json({ extended: false }))
