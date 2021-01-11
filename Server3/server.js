@@ -1,8 +1,27 @@
 const express = require('express')
 const app = express()
 const mongoose = require("mongoose")
+const mysql = require('mysql')
+const dotenv = require('dotenv')
 var jwt = require('jsonwebtoken')
-var amqp = require('./amqpLib_RoadZ')
+
+dotenv.config({ path: './.env'})
+
+const db = mysql.createConnection({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE,
+    port: process.env.DATABASE_PORT
+})
+
+db.connect((error) =>{
+    if(error) {
+        console.log(error)
+    }else {
+        console.log("MySQL connected! :)))")
+    }
+})
 
 async function connectDB(){
     await mongoose.connect(
@@ -41,28 +60,39 @@ app.post('/signup', async(req, res) => {
     const  {email, username, birthDate, password} = req.body
     console.log(`${email}:${username}:${birthDate}:${password}`);
 
-    //await amqp.sendDataToQueue('UserRegister', `${email}:${username}:${birthDate}:${password}`);
-    //Rabbit MQ muss schauen ob der User bereits registriert ist
-    //Callback den User von der datenbank
+    db.query('SELECT email FROM roadzuser WHERE email = ?', [email], (error, results) =>{
+        if(error){
+            console.log(error)
+        }
 
-    let user = await User.findOne({email}) //Direkt über Datenbank
+        if(results.length > 0){
+            return res.json({msg: "Email already taken"})
+        }
+    })
 
-    if(user){
+    //let user = await User.findOne({email}) //Direkt über Datenbank
+
+    /*if(user){
         return res.json({msg: "Email already taken"})
-    }
-    /*if(user.username){
-        return res.json({msg: "Username already taken"})
     }*/
+    db.query('INSERT INTO roadzuser SET ?', {username: username, email: email, pwhash: password}, (error, results) =>{
+        if(error){
+            console.log(error)
+        }else{
+            console.log(results)
+            return res.json('User registered')
+        }
+    })
 
-    user = new User({
+    /*user = new User({
         email,
         username,
         birthDate,
         password,
     })
-    console.log(user)
+    console.log(user)*/
 
-    await user.save()
+    //await user.save()
     var token = jwt.sign({ id: user.id }, 'password');
     res.json({token: token})
 })
