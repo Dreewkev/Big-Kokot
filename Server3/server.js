@@ -69,7 +69,7 @@ app.post('/signup', async (req, res) => {
         if (results.length > 0) {
             return res.json({ msg: "Email already taken" })
         }
-        
+
         db.query(`INSERT INTO roadzuser (fname,lname,username,email,pwhash,dob,phonenumber,secretquestion,secretanswer) VALUES ("kevin", "drewniak", "${username}", "${email}", "${password}", "2021-01-11", "012301", "hallo", "tschau");`, (error, results) => {
             if (error) {
                 console.log(error)
@@ -78,7 +78,7 @@ app.post('/signup', async (req, res) => {
                 return res.json('User registered')
             }
             const id = results[0].id;
-    
+
             var token = jwt.sign({ id/*id: user.id*/ }, 'password');
             res.json({ token: token })
         })
@@ -89,8 +89,8 @@ app.post('/signup', async (req, res) => {
     /*if(user){
         return res.json({msg: "Email already taken"})
     }*/
-    
-    
+
+
     /*let user = new User({
         email,
         username,
@@ -100,13 +100,32 @@ app.post('/signup', async (req, res) => {
     console.log(user)*/
 
     //await user.save()
-   
+
 })
 
 //login route api
 app.post('/login', async (req, res) => {
     const { email, username, birthDate, password } = req.body
     console.log(`${email}:${username}:${birthDate}:${password}`);
+
+    try {
+        const { email, password } = req.body
+
+        if(!email || !password){
+            return res.json({msg: "Please provide an email and a password"})
+        }
+
+        db.query('SELECT * FROM roadzuser WHERE email = ?', [email], async(error, results) =>{
+            console.log(results)
+            if(!results || password != results[0].password){
+                res.json({ msg: "Email or the password is incorrect"})
+            }
+        })
+
+    } catch (error) {
+
+    }
+
 
     let user = await User.findOne({ email })
     console.log(user)
