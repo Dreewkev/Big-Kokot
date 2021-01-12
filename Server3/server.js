@@ -121,7 +121,7 @@ app.post('/login', async (req, res) => {
             }
 
             console.log('REULSTSSDASDASD: ', results)
-            if(!results || password != results[0].pwhash){
+            if(!results || password != results[0].password){
                 res.json({ msg: "Email or the password is incorrect"})
             }else{
                 const id = results[0].id;
