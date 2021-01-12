@@ -105,8 +105,8 @@ app.post('/signup', async (req, res) => {
 
 //login route api
 app.post('/login', async (req, res) => {
-    const { email, username, birthDate, password } = req.body
-    console.log(`${email}:${username}:${birthDate}:${password}`);
+    //const { email, username, birthDate, password } = req.body
+    //console.log(`${email}:${username}:${birthDate}:${password}`);
 
     try {
         const { email, password } = req.body
@@ -120,16 +120,18 @@ app.post('/login', async (req, res) => {
                 console.log(error)
             }
 
-            console.log(results)
-            if(!results || password != results[0].pwhash){
+            console.log('REULSTSSDASDASD: ', results)
+            if(!results || password != results[0].password){
                 res.json({ msg: "Email or the password is incorrect"})
+            }else{
+                const id = results[0].id;
+
+                var token = jwt.sign({ id: user.id }, 'password');
+                return res.json({ token: token })
             }
         })
 
-        const id = results[0].id;
-
-        var token = jwt.sign({ id: user.id }, 'password');
-        return res.json({ token: token })
+        
 
     } catch (error) {
         console.log(error)
