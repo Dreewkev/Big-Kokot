@@ -115,7 +115,7 @@ app.post('/login', async (req, res) => {
             return res.json({msg: "Please provide an email and a password"})
         }
 
-        db.query('SELECT * FROM roadzuser WHERE email = ?', [email], async(error, results) =>{
+        db.query('SELECT email, password FROM roadzuser WHERE email = ?', [email], async(error, results) =>{
             if (error) {
                 console.log(error)
             }
