@@ -115,13 +115,13 @@ app.post('/login', async (req, res) => {
             return res.json({msg: "Please provide an email and a password"})
         }
 
-        db.query('SELECT email, password FROM roadzuser WHERE email = ?', [email], async(error, results) =>{
+        db.query('SELECT email, pwhash FROM roadzuser WHERE email = ?', [email], async(error, results) =>{
             if (error) {
                 console.log(error)
             }
 
             console.log('REULSTSSDASDASD: ', results)
-            if(!results || password != results[0].password){
+            if(!results || password != results[0].pwhash){
                 res.json({ msg: "Email or the password is incorrect"})
             }else{
                 const id = results[0].id;
