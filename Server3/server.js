@@ -122,22 +122,26 @@ app.post('/login', async (req, res) => {
             }
         })
 
-    } catch (error) {
+        const id = results[0].id;
 
+        var token = jwt.sign({ id: user.id }, 'password');
+        return res.json({ token: token })
+
+    } catch (error) {
+        console.log(error)
     }
 
 
-    let user = await User.findOne({ email })
+    /*let user = await User.findOne({ email })
     console.log(user)
     if (!user) {
         return res.json({ msg: "no user found with that email" })
     }
     if (user.password !== password) {
         return res.json({ msg: "password is not correct" })
-    }
+    }*/
 
-    var token = jwt.sign({ id: user.id }, 'password');
-    return res.json({ token: token })
+    
 })
 
 //private route
