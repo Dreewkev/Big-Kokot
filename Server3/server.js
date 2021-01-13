@@ -36,7 +36,7 @@ app.post('/signup', async (req, res) => {
         if (error) {
             console.log(error)
         }
-        
+
         console.log(results)
         if (results.length > 0) {
             return res.json({ msg: "Email already taken" })
@@ -58,32 +58,34 @@ app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body
 
-        if(!email || !password){
-            return res.json({msg: "Please provide an email and a password"})
+        if (!email || !password) {
+            return res.json({ msg: "Please provide an email and a password" })
         }
 
-        db.query('SELECT email, pwhash FROM roadzuser WHERE email = ?', [email], async(error, results) =>{
+        db.query('SELECT email, pwhash FROM roadzuser WHERE email = ?', [email], async (error, results) => {
             if (error) {
                 console.log(error)
             }
 
             console.log('User logging in: ', results)
-            if(!results || password !== results[0].pwhash){
-                res.json({ msg: "Email or the password is incorrect"})
-            }else{
+            if (!results || password !== results[0].pwhash) {
+                res.json({ msg: "Email or the password is incorrect" })
+            } else {
                 const id = results[0].id;
 
-                var token = jwt.sign({ id }, 'password')
+                var token = jwt.sign({ id }, process.env.JWT_SECRET, {
+                    expiresIn: process.env.JWT_EXPIRES_IN
+                })
                 console.log("Token:", token)
                 return res.json({ token: token })
             }
         })
 
-        
+
 
     } catch (error) {
         console.log(error)
-    }  
+    }
 })
 
 //private route
