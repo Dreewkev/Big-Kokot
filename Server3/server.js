@@ -124,7 +124,7 @@ app.post('/login', async (req, res) => {
                 const id = results[0].id;
 
                 var token = jwt.sign({ id }, 'password')
-                console.log(token)
+                console.log("Token:", token)
                 return res.json({ token: token })
             }
         })
