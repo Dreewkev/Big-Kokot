@@ -122,7 +122,7 @@ app.post('/login', async (req, res) => {
             }else{
                 const id = results[0].id;
 
-                var token = jwt.sign({ id: user.id }, 'password');
+                var token = jwt.sign({ id }, 'password');
                 return res.json({ token: token })
             }
         })
