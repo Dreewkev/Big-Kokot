@@ -37,7 +37,7 @@ app.post('/signup', async (req, res) => {
             console.log(error)
         }
         
-        console.log(results[0].pwhash)
+        console.log(results[0].password)
         if (results.length > 0) {
             return res.json({ msg: "Email already taken" })
         }
