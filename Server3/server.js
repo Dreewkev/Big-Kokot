@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const mysql = require('mysql')
 const dotenv = require('dotenv')
+const amqp = require('./amqpLib_RoadZ')
 var jwt = require('jsonwebtoken')
 
 dotenv.config({ path: './.env' })
@@ -80,9 +81,6 @@ app.post('/login', async (req, res) => {
                 return res.json({ token: token })
             }
         })
-
-
-
     } catch (error) {
         console.log(error)
     }
