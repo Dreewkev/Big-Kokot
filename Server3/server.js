@@ -57,15 +57,16 @@ app.get('/', (req, res) => res.send('Hello World!'))
 
 //signup route api
 app.post('/signup', async (req, res) => {
-    const { email, username, birthDate, password } = req.body
+    const { fname, lname, username, email, password, birthDate, phonenumber, secretquestion, secretanswer } = req.body
     //const  {fname, lname, username, email, password, birthDate, phonenumber, secretquestion, secretanswer} = req.body
-    console.log(`${email}:${username}:${birthDate}:${password}`);
+    console.log(`${fname}:${lname}:${username}:${email}:${password}:${birthDate}:${phonenumber}:${secretquestion}:${secretanswer}`);
 
     db.query('SELECT email FROM roadzuser WHERE email = ?', [email], (error, results) => {
         if (error) {
             console.log(error)
         }
-
+        
+        console.log(results)
         if (results.length > 0) {
             return res.json({ msg: "Email already taken" })
         }
@@ -116,13 +117,14 @@ app.post('/login', async (req, res) => {
                 console.log(error)
             }
 
-            console.log('REULSTSSDASDASD: ', results)
+            console.log('User logging in: ', results)
             if(!results || password !== results[0].pwhash){
                 res.json({ msg: "Email or the password is incorrect"})
             }else{
                 const id = results[0].id;
 
-                var token = jwt.sign({ id }, 'password');
+                var token = jwt.sign({ id }, 'password')
+                console.log(token)
                 return res.json({ token: token })
             }
         })
