@@ -71,7 +71,7 @@ app.post('/signup', async (req, res) => {
             return res.json({ msg: "Email already taken" })
         }
 
-        db.query(`INSERT INTO roadzuser (fname,lname,username,email,pwhash,dob,phonenumber,secretquestion,secretanswer) VALUES ("kevin", "drewniak", "${username}", "${email}", "${password}", "2021-01-11", "012301", "hallo", "tschau");`, (error, results2) => {
+        db.query(`INSERT INTO roadzuser (fname,lname,username,email,pwhash,dob,phonenumber,secretquestion,secretanswer) VALUES ("${fname}", "${lname}", "${username}", "${email}", "${password}", "${birthDate}", "${phonenumber}", "${secretquestion}", "${secretanswer}");`, (error, results2) => {
             if (error) {
                 console.log(error)
             } else {
