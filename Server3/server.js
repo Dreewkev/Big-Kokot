@@ -1,6 +1,5 @@
 const express = require('express')
 const app = express()
-//const mongoose = require("mongoose")
 const mysql = require('mysql')
 const dotenv = require('dotenv')
 var jwt = require('jsonwebtoken')
@@ -23,42 +22,14 @@ db.connect((error) => {
     }
 })
 
-/*async function connectDB() {
-    await mongoose.connect(
-        "mongodb+srv://drew1:roadz@cluster0.pi9ou.mongodb.net/drew?retryWrites=true&w=majority",
-        { useUnifiedTopology: true, useNewUrlParser: true }
-    )
-    console.log("db connected")
-}
-connectDB()*/
-
 //this takes the psot body
 app.use(express.json({ extended: false }))
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
-//model
-//var schema = new mongoose.Schema({ email: 'string', username: 'string', birthDate: 'string', password: 'string'})
-//var User = mongoose.model('User', schema)
-
-/*amqp.connect('amqp://localhost', (err, conn) => {
-    conn.createChannel((err, ch) => {
-        var queue = 'FirstQueue'
-        var message = { type: '2', contect: 'Hello RabbitMQ'}
-
-        ch.assertQueue(queue, {durable: false})
-        ch.sendToQueue(queue, Buffer.from(JSON.stringify(message)))
-        console.log("Message was sent")
-    })
-    setTimeout(() => {
-        conn.close()
-    }) 
-})*/
-
 //signup route api
 app.post('/signup', async (req, res) => {
     const { fname, lname, username, email, password, birthDate, phonenumber, secretquestion, secretanswer } = req.body
-    //const  {fname, lname, username, email, password, birthDate, phonenumber, secretquestion, secretanswer} = req.body
     console.log(`${fname}:${lname}:${username}:${email}:${password}:${birthDate}:${phonenumber}:${secretquestion}:${secretanswer}`);
 
     db.query('SELECT email FROM roadzuser WHERE email = ?', [email], (error, results) => {
@@ -66,7 +37,7 @@ app.post('/signup', async (req, res) => {
             console.log(error)
         }
         
-        console.log(results)
+        console.log(results[0])
         if (results.length > 0) {
             return res.json({ msg: "Email already taken" })
         }
@@ -80,31 +51,10 @@ app.post('/signup', async (req, res) => {
             }
         })
     })
-
-    //let user = await User.findOne({email}) //Direkt über Datenbank
-
-    /*if(user){
-        return res.json({msg: "Email already taken"})
-    }*/
-
-
-    /*let user = new User({
-        email,
-        username,
-        birthDate,
-        password,
-    })
-    console.log(user)*/
-
-    //await user.save()
-
 })
 
 //login route api
 app.post('/login', async (req, res) => {
-    //const { email, username, birthDate, password } = req.body
-    //console.log(`${email}:${username}:${birthDate}:${password}`);
-
     try {
         const { email, password } = req.body
 
@@ -133,19 +83,7 @@ app.post('/login', async (req, res) => {
 
     } catch (error) {
         console.log(error)
-    }
-
-
-    /*let user = await User.findOne({ email })
-    console.log(user)
-    if (!user) {
-        return res.json({ msg: "no user found with that email" })
-    }
-    if (user.password !== password) {
-        return res.json({ msg: "password is not correct" })
-    }*/
-
-    
+    }  
 })
 
 //private route
