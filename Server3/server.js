@@ -77,12 +77,6 @@ app.post('/signup', async (req, res) => {
                 console.log(results2)
                 return res.json('User registered')
             }
-            console.log(results2[0].id)
-            res.json(results2[0].id)
-            const id = results2[0].id;
-
-            var token = jwt.sign({ id/*id: user.id*/ }, 'password');
-            res.json({ token: token })
         })
     })
 
@@ -123,7 +117,7 @@ app.post('/login', async (req, res) => {
             }
 
             console.log('REULSTSSDASDASD: ', results)
-            if(!results || password != results[0].password){
+            if(!results || password !== results[0].password){
                 res.json({ msg: "Email or the password is incorrect"})
             }else{
                 const id = results[0].id;
