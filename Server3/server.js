@@ -70,16 +70,16 @@ app.post('/signup', async (req, res) => {
             return res.json({ msg: "Email already taken" })
         }
 
-        db.query(`INSERT INTO roadzuser (fname,lname,username,email,pwhash,dob,phonenumber,secretquestion,secretanswer) VALUES ("kevin", "drewniak", "${username}", "${email}", "${password}", "2021-01-11", "012301", "hallo", "tschau");`, (error, results) => {
+        db.query(`INSERT INTO roadzuser (fname,lname,username,email,pwhash,dob,phonenumber,secretquestion,secretanswer) VALUES ("kevin", "drewniak", "${username}", "${email}", "${password}", "2021-01-11", "012301", "hallo", "tschau");`, (error, results2) => {
             if (error) {
                 console.log(error)
             } else {
-                console.log(results)
+                console.log(results2)
                 return res.json('User registered')
             }
-            console.log(results[0].id)
-            res.json(results[0].id)
-            const id = results[0].id;
+            console.log(results2[0].id)
+            res.json(results2[0].id)
+            const id = results2[0].id;
 
             var token = jwt.sign({ id/*id: user.id*/ }, 'password');
             res.json({ token: token })
