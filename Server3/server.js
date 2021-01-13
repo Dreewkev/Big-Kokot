@@ -73,7 +73,7 @@ app.post('/login', async (req, res) => {
             } else {
                 const id = results[0].id;
 
-                var token = jwt.sign({ id }, process.env.JWT_SECRET, {
+                var token = jwt.sign({ id }, 'password', {
                     expiresIn: process.env.JWT_EXPIRES_IN
                 })
                 console.log("Token:", token)
