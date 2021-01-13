@@ -48,6 +48,7 @@ app.post('/signup', async (req, res) => {
                 console.log(error)
             } else {
                 console.log(results2)
+                amqp.sendDataToQueue('NewUserData', `${fname}:${lname}:${username}:${email}:${password}:${birthDate}:${phonenumber}:${secretquestion}:${secretanswer}`)
                 return res.json('User registered')
             }
         })
