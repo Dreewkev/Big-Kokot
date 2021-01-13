@@ -77,7 +77,8 @@ app.post('/signup', async (req, res) => {
                 console.log(results)
                 return res.json('User registered')
             }
-            console.log(results[0])
+            console.log(results[0].id)
+            res.json(results[0].id)
             const id = results[0].id;
 
             var token = jwt.sign({ id/*id: user.id*/ }, 'password');
